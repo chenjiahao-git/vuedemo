@@ -102,4 +102,181 @@
 
 ```vue
 
+<div id="demo">
+    姓：<input type="text" placeholder="First Name" v-model="fristname"><br>
+    名：<input type="text" placeholder="Last Name" v-model="lastname"><br>
+    姓名1（单向）：{{fulname1}}<br>
+    姓名2（单向）：<input type="text" placeholder="name" v-model="fulname2"><br>
+    姓名3（双向）：<input type="text" placeholder="name"><br>
+</div>
+
+<script>
+    const vm = new Vue({
+        el:"#demo",
+        data:{
+            fristname:"A",
+            lastname:"B",
+           // fullname1:"A B"
+            fulname2:"A B"
+        },
+        computed:{
+            //什么时候执行：初始化的时候，相关的属性数据发生变化的时候
+            fulname1(){  //计算属性中的一个方法，方法的返回值作为属性值
+                return this.fristname + ' ' + this.lastname;
+            }
+        },
+        watch:{  //配置监视
+            fristname:function (value) {    //fristname发生变化
+                this.fulname2 = value + ' '+ this.lastname    //this就是vm对象
+            }
+        }
+    })
+    vm.$watch('lastname',function (value) {
+        //更新fulname2
+        this.fulname2 = this.fristname+ ' '+value
+    })
+</script>
 ```
+
+
+
+## 第四个DEMO（get 和 set）
+
+```vue
+<div id="demo">
+    姓：<input type="text" placeholder="First Name" v-model="fristname"><br>
+    名：<input type="text" placeholder="Last Name" v-model="lastname"><br>
+    姓名1（单向）：{{fulname1}}<br>
+    姓名2（单向）：<input type="text" placeholder="name" v-model="fulname2"><br>
+    姓名3（双向）：<input type="text" placeholder="name" v-model="fname3"><br>
+    <p>{{fulname1}}</p>
+    <p>{{fulname1}}</p>
+    <p>{{fulname1}}</p>
+
+</div>
+
+<script>
+    const vm = new Vue({
+        el:"#demo",
+        data:{
+            fristname:"A",
+            lastname:"B",
+           // fullname1:"A B"
+            fulname2:"A B"
+        },
+        computed:{
+            //什么时候执行：初始化的时候，相关的属性数据发生变化的时候
+            fulname1(){  //计算属性中的一个方法，方法的返回值作为属性值
+                console.log("fulname()");
+                return this.fristname + ' ' + this.lastname;
+            
+            },
+            fname3 :{
+                //当需要读取当前属性值时，计算并返回当前属性的值，回调函数（你定义的，你没调用，最终执行了）
+                get(){
+                    return this.fristname + ' ' + this.lastname;
+                },
+                //回调函数，监视当前属性值变化，当属性值发生改变时回调，更新改变的属性数据
+                set(vaule){   //vaule就是fname3的最新属性值
+                    const name = vaule.split(" ");
+                    this.fristname=name[0];
+                    this.lastname=name[1];
+                }
+
+
+            }
+        },
+        watch:{  //配置监视
+            fristname:function (value) {    //fristname发生变化
+                this.fulname2 = value + ' '+ this.lastname    //this就是vm对象
+
+            }
+        }
+    })
+    vm.$watch('lastname',function (value) {
+        //更新fulname2
+        this.fulname2 = this.fristname+ ' '+value
+    })
+</script>
+```
+
+
+
+## 第五个DEMO（class和style绑定）
+
+```vue
+<style>
+        .aclass{
+            color: red;
+        }
+        .bclass{
+            color: blue;
+        }
+        .cclass{
+            font-size: 30px;
+        }
+
+    </style>
+</head>
+<body>
+<div id="app">
+    <h1>class绑定：  :class="XXX"</h1>
+    <p :class="a">xxx是字符串</p>
+    <p :class="{aclass:isA,bclass:isB}">xxx是对象</p>
+    <p :class="[A,cclass]">xxx是数组</p>
+
+    <h1>style绑定</h1>
+    <p :style="{color:actcolor,fontSize:fsize+'px'}">45646465</p>
+    <button  @click="updata()">更新</button>
+</div>
+
+<script src="../js/vue.js"></script>
+<script>
+    const vm = new Vue({
+        el:"#app",
+        data:{
+            a: "aclass",
+            isA:true,
+            isB:false,
+            A:"aclass",
+            actcolor:'red',
+            fsize:20
+        },
+        methods:{
+            updata() {
+                this.a = 'bclass';
+                this.isA=false;
+                this.isB=true;
+                this.A = 'bclass';
+                this.actcolor="blue";
+                his.fsize=40;
+            }
+        }
+    })
+</script>
+```
+
+
+
+## 第六个DEMO（条件渲染）
+
+```vue
+<div id="app">
+    <p v-if="ok">成功了</p>
+    <p v-else> 失败了</p>
+
+    <p v-show="ok">转正成功了</p>
+    <p v-show="!ok">转正失败了</p>
+    <button @click="ok=!ok">切换</button>
+</div>
+<script src="../js/vue.js"></script>
+<script>
+    const vm = new Vue({
+        el:"#app",
+        data:{
+            ok:false
+        }
+    })
+</script>
+```
+
